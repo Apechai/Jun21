@@ -29,41 +29,59 @@
     // Drawing code
 }
 */
+
+
+
 - (void) drawRect: (CGRect) rect
 {
     // Drawing code
     // Drawing code
-   CGRect bounds = self.bounds;
-   CGFloat radius = .2 * bounds.size.width;	//in pixels
-     
+    // Drawing code
+    // Drawing code
+    CGRect bounds = self.bounds;
+    CGFloat radius = .1 * bounds.size.width;	//in pixels
+    CGSize          myShadowOffset = CGSizeMake (-15,  20);
+    
+    CGColorRef      myColor;
+    CGColorSpaceRef myColorSpace;
+    CGFloat         myColorValues[] = {1, 0, 0, .6};
+    
+    myColorSpace = CGColorSpaceCreateDeviceRGB ();
+    myColor = CGColorCreate (myColorSpace, myColorValues);
+    
+    
     /*
      Create the invisible square that will surround the circle.
      Place the upper left corner of the square at the upper left corner of
      the View.  bounds.origin.x and bounds.origin.y are the coordinates of
      the upper left corner of the View.
      */
-    CGRect r = CGRectMake(
-                        bounds.origin.x,
-                        bounds.origin.y,
-                        2 * radius,
-                        2 * radius
-                          );
     
-     CGContextRef c = UIGraphicsGetCurrentContext();
-     CGContextBeginPath(c); //unnecessary here: the path is already empty.
-     CGContextAddEllipseInRect(c, r);
-     CGContextSetRGBStrokeColor(c, 0.8, 0.84, 0.84, 0.5);	//tiffany engagement ring silver 206,215,214
-     CGContextStrokePath(c);
-    for (int i = 1; i<=4; i++){
+    CGContextRef c = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(c, 3.0);
+    CGContextBeginPath(c); //unnecessary here: the path is already empty.
+    CGContextSetRGBStrokeColor(c, 0.8, 0.84, 0.84, 0.5);	//tiffany engagement ring silver 206,215,214
+    CGContextStrokePath(c);
+    
+    CGContextSetShadow (c, myShadowOffset, 5); 
+    //CGContextSetShadowWithColor (c, myShadowOffset, 5, myColor);
+    
+    for (int i = 0; i < 10; i++){
+        
+        int angle = (i % 2 ==0) ? 2 * i: -2 * i;
+        
+        CGContextRotateCTM(c, angle * M_PI / 180);
+        
         CGRect r = CGRectMake(
-                                    bounds.origin.x + radius*i,
-                                    bounds.origin.y + radius*i,
-                                    2 * radius,
-                                    2 * radius
-                                    );
+                              bounds.origin.x + radius*i,
+                              bounds.origin.y + radius*i,
+                              2 * radius,
+                              1.5 * radius
+                              );
         CGContextAddEllipseInRect(c, r);
-        CGContextSetRGBStrokeColor(c, 1 - i*0.2, i*0.2, i*0.2, 1);
+        CGContextSetRGBStrokeColor(c, 1 - i*0.1, i*0.1, i*0.1, 1);
         CGContextStrokePath(c);
+
         
     };
 
